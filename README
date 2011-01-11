@@ -1,0 +1,87 @@
+This plugin implements PayPal NVP APIs
+
+PayPal Guides 
+https://cms.paypal.com/cms_content/US/en_US/files/developer/PP_ExpressCheckout_IntegrationGuide.pdf
+https://cms.paypal.com/cms_content/US/en_US/files/developer/PP_NVPAPI_DeveloperGuide.pdf
+
+//Set up your PayP credentials for plugin by providing the following fields needed by this plugin
+//in your Config.groovy file
+
+username=""
+password=""
+signature=""
+version=""
+ipnURL=""  //for sandbox ->https://www.sandbox.paypal.com/cgi-bin/webscr
+endpoint=""//https://ppmts.custhelp.com/app/answers/detail/a_id/391/kw/endpoints/sno/1
+//example-> https://api-3t.sandbox.paypal.com/nvp
+
+//================
+
+*Services provided 
+   ExpressCheckoutService, HttpService ,InstantPaymentNotificationService
+
+//================use ExpressCheckoutService example==============================
+
+  def expressCheckoutService //inject into class
+
+	/* following form from gsp will call callSetEC
+	 *
+	 *<form method='post' action="callSetEC">
+	 *<input type='hidden' name='PAYMENTREQUEST_0_PAYMENTACTION' value='Authorization'/>
+	 *<input name='PAYMENTREQUEST_0_AMT' value='19.95'/>
+	 *<input type='hidden' name='RETURNURL' value='http://www.YourReturnURL.com'/>
+	 *<input type='hidden' name='CANCELURL' value='http://www.YourCancelURL.com'/>
+	 *<input type='submit' name='METHOD' value='SetExpressCheckout'/>
+	 *</form>
+	 */
+    def callSetEC={
+        render expressCheckoutService.setExpressCheckout(params)//params must be approved values via PayPal EC guide 
+    }
+    def getEC={
+        render expressCheckoutService.getExpressCheckout(params?.token)
+    }
+    def doEC={
+        render expressCheckoutService.doExpressCheckout(params)
+    }
+	
+//================use InstantPaymentNotificationService example==============================
+   def instantPaymentNotificationService //inject service 
+   def handleIPN ={
+        //postIPNBackToPayPal posts all data to PayPal and returns VERIFIED if no issues
+		def ipnstr = instantPaymentNotificationService.postIPNBackToPayPal(params)        
+        //code to check ipnstr and record IPN information below
+		
+        
+    }
+//===================HttpService	================================
+
+*utility class for posting to paypal
+
+	def post( String query, String endpoint)
+	
+//===================Tags available	================================
+	name space is "ppec"
+	
+tag->	redirectToPayPalLink //convienience tag, expects a token parameter
+			//use in gsp
+			<ppec:redirectToPayPalLink token="${p?.TOKEN}"/>
+	
+tag-> 	countrycodes
+		/*returns all countrycodes in a <select> tag   ..https://www.x.com/docs/DOC-1154
+		 * edit list for you own needs
+		 */
+		 <ppec:countrycodes />
+		 
+tag->	statecodes
+	/*returns all state codes in a <select> tag   ..https://www.x.com/docs/DOC-1214
+		 * edit list for you own needs
+
+tag-> paypalMark	
+	/* displays PayPal mark on page, accepts the following sizes.. expects 'picSize' parameter
+	 * 'tiny'=37x23
+	 * 'small'=50x34
+	 * 'medium'=60x38
+	 * 'large'=180x113
+	 * example for gsp below
+	 * <ppec:paypalMark picSize="large" />
+	 */

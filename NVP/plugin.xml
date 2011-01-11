@@ -1,0 +1,18 @@
+<plugin name='pay-pal-ec' version='0.1' grailsVersion='1.3.6 &gt; *'>
+  <author>PayPalCode</author>
+  <title>PayPal Express Checkout Plugin</title>
+  <description>Plugin is designed to help with integrating PayPal's ExpressCheckout APIs into your grails project</description>
+  <documentation>https://github.com/PayPalCode/Grails/blob/master/README</documentation>
+  <resources>
+    <resource>BuildConfig</resource>
+    <resource>Config</resource>
+    <resource>DataSource</resource>
+    <resource>UrlMappings</resource>
+    <resource>com.paypalcode.ExpressCheckoutService</resource>
+    <resource>com.paypalcode.HttpService</resource>
+    <resource>com.paypalcode.InstantPaymentNotificationService</resource>
+    <resource>paypalec.ECTagLib</resource>
+  </resources>
+  <dependencies />
+  <behavior />
+</plugin>
